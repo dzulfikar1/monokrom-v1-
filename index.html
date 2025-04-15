@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DZULFIKAR | Monochrome Feels</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      user-select: none;
+      cursor: pointer;
+      transition: filter 0.5s;
+    }
+
+    .main-text {
+      font-size: 2.5rem;
+      font-weight: bold;
+      min-height: 80px;
+      opacity: 0;
+      transform: translateY(-30px);
+      /* Awal animasi fade in dengan typewriter effect */
+      animation: fadeInSlide 2s forwards, typewriter 2s steps(30) forwards;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid rgba(255, 255, 255, 0.75);
+    }
+
+    .sub-text {
+      font-size: 1rem;
+      margin-top: 10px;
+      opacity: 0.6;
+    }
+
+    @keyframes fadeInSlide {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeOutSlide {
+      to {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+    }
+    
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    /* Blur transition saat klik */
+    .blur {
+      filter: blur(5px);
+    }
+
+    .button-container {
+      margin-top: 40px;
+      display: none;
+      gap: 20px;
+      flex-direction: row;
+    }
+
+    .choice-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .choice-btn:hover {
+      background: white;
+      color: #2c5364;
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgMusic" loop>
+    <source src="monokrom.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="main-text" id="mainText">HELLO, HOW ARE YOU?</div>
+  <div class="sub-text">Dzulfikar</div>
+
+  <div class="button-container" id="buttonContainer">
+    <button class="choice-btn">Come Back?</button>
+    <button class="choice-btn">Let Go?</button>
+  </div>
+
+  <script>
+    const texts = [
+      "HELLO, HOW ARE YOU?",
+      "I STILL THINK ABOUT US.",
+      "DO YOU MISS ME TOO?",
+      "MAYBE WE DESERVE A SECOND CHANCE.",
+      "IT WASN'T PERFECT, BUT IT WAS REAL.",
+      "CAN WE START OVER?"
+    ];
+
+    let index = 0;
+    const mainText = document.getElementById("mainText");
+    const buttonContainer = document.getElementById("buttonContainer");
+    const bgMusic = document.getElementById("bgMusic");
+
+    // Mulai musik setelah interaksi pertama (untuk mengatasi autoplay block)
+    const playMusic = () => {
+      bgMusic.play().catch(() => {}); 
+      // Perintah ini cuma bakal jalan sekali waktu klik pertama.
+      document.body.removeEventListener("click", playMusic);
+    };
+
+    document.body.addEventListener("click", playMusic, { once: true });
+
+    document.body.addEventListener("click", () => {
+      // Tambah blur untuk transisi
+      document.body.classList.add("blur");
+      
+      // Animasi fade out sebelum ganti teks
+      mainText.style.animation = "fadeOutSlide 0.5s forwards";
+      
+      setTimeout(() => {
+        index++;
+        if (index < texts.length) {
+          // Ganti teks dan animasikan typewriter lagi
+          mainText.textContent = texts[index];
+          mainText.style.animation = "fadeInSlide 1s forwards, typewriter 1.5s steps(30) forwards";
+          document.body.classList.remove("blur");
+        } else {
+          // Jika udah terakhir, tampilkan tombol pilihan
+          mainText.style.display = "none";
+          buttonContainer.style.display = "flex";
+          document.body.classList.remove("blur");
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>
